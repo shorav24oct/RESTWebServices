@@ -13,45 +13,47 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 
 @Path("/messages")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class MessageResource {
 
 	MessageService service = new MessageService();
 
 	@GET
-	@Produces(MediaType.APPLICATION_XML)
-	public List<Message> getMessages() {
+	public List<Message> getMessages(@QueryParam("year") int year) {
+		System.out.println(year);
 		return service.getAllMessages();
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{id}")
 	public Message getMessage(@PathParam("id") long id) {
 		return service.getMessage(id);
 	}
 
 	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	public Message addMessage(Message message) {
 		return service.addMessage(message);
 	}
 
 	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	public Message updateMessage(Message message) {
 		return service.updateMessage(message);
 	}
 
 	@DELETE
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{id}")
 	public Message deleteMessage(@PathParam("id") long id) {
 		return service.deleteMessage(id);
+	}
+	
+	@Path("/{messageId}/comment")
+	public CommentResource getCommentResource() {
+		return new CommentResource();
 	}
 
 }
