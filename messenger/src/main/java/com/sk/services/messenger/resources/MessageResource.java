@@ -1,5 +1,6 @@
 package com.sk.services.messenger.resources;
 
+import java.net.URI;
 import java.util.List;
 
 import com.sk.services.messenger.model.Message;
@@ -14,7 +15,10 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 
 @Path("/messages")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -36,8 +40,14 @@ public class MessageResource {
 	}
 
 	@POST
-	public Message addMessage(Message message) {
-		return service.addMessage(message);
+	public Response addMessage(Message message, @Context UriInfo uriInfo) {
+		Message serviceMessage = service.addMessage(message);
+
+		String newId = String.valueOf(serviceMessage.getMessageId());
+
+		URI uri = uriInfo.getAbsolutePathBuilder().path(newId).build();
+
+		return Response.created(uri).entity(serviceMessage).build();
 	}
 
 	@PUT
@@ -50,7 +60,7 @@ public class MessageResource {
 	public Message deleteMessage(@PathParam("id") long id) {
 		return service.deleteMessage(id);
 	}
-	
+
 	@Path("/{messageId}/comment")
 	public CommentResource getCommentResource() {
 		return new CommentResource();

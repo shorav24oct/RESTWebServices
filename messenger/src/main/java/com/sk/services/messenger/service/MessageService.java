@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sk.services.messenger.database.DatabaseClass;
+import com.sk.services.messenger.exception.DataNotFoundException;
 import com.sk.services.messenger.model.Message;
 
 public class MessageService {
@@ -21,7 +22,10 @@ public class MessageService {
 	}
 
 	public Message getMessage(long id) {
-		return messageMap.get(id);
+		if (messageMap.get(id) == null)
+			throw new DataNotFoundException("No message is present with the ID: " + id);
+		else
+			return messageMap.get(id);
 	}
 
 	public Message addMessage(Message message) {
