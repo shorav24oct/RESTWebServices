@@ -2,7 +2,11 @@ package com.sk.services.messenger.model;
 
 import java.util.Date;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Message {
+
 	private long messageId;
 	private String message;
 	private String author;
@@ -12,11 +16,11 @@ public class Message {
 
 	}
 
-	public Message(long messageId, String message, String author, Date created) {
+	public Message(long messageId, String message, String author) {
 		this.messageId = messageId;
 		this.message = message;
 		this.author = author;
-		this.created = created;
+		this.created = new Date();
 	}
 
 	public long getMessageId() {
